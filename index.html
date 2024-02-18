@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Lines</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #output {
+            font-size: 25vw;
+            margin-top: 15vh;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="display:none;">Display Lines</h1>
+
+    <form id="inputForm">
+        <label for="paragraphInput">Type in multilines for effects:</label><br>
+        <textarea id="paragraphInput" rows="5" cols="50"></textarea><br>
+        <label for="delaySlider">Select delay (in milliseconds):</label><br>
+        <input type="range" id="delaySlider" min="0" max="2000" step="100" value="200">
+        <span id="delayValue">200</span> milliseconds<br>
+        <input type="button" value="Submit" onclick="displayLines()">
+    </form>
+
+    <div id="output"></div>
+
+    <script>
+        function displayLines() {
+            var inputText = document.getElementById("paragraphInput").value;
+            var lines = inputText.split('\n');
+            var outputDiv = document.getElementById("output");
+            var delay = parseInt(document.getElementById("delaySlider").value);
+            var currentIndex = 0;
+
+            // Define arrays of background and text colors
+            var backgroundColors = ["#836FFF", "#211951", "#000000", "#7E30E1"];
+            var textColors = ["#15F5BA", "#F72798", "#E26EE5", "#F3F8FF"];
+
+            // Clear previous content and styles
+            outputDiv.innerHTML = '';
+            outputDiv.style.color = '';
+            outputDiv.style.backgroundColor = '';
+
+            function displayLine() {
+                // Get the colors for the current iteration
+                var bgColor = backgroundColors[currentIndex % backgroundColors.length];
+                var textColor = textColors[currentIndex % textColors.length];
+
+                // Set styles and content
+                outputDiv.innerHTML = lines[currentIndex];
+                outputDiv.style.color = textColor;
+                outputDiv.style.backgroundColor = bgColor;
+
+                // Change the background color of the entire view
+                document.body.style.backgroundColor = bgColor;
+
+                // Reset the loop to display the next line
+                setTimeout(function () {
+                    currentIndex = (currentIndex + 1) % lines.length;
+                    displayLine();
+                }, delay);
+            }
+
+            // Start the loop
+            displayLine();
+
+            // Hide the form and heading after submission
+            document.getElementById("inputForm").style.display = "none";
+            document.querySelector("h1").style.display = "none";
+        }
+
+        // Update delay value display
+        document.getElementById("delaySlider").addEventListener("input", function() {
+            document.getElementById("delayValue").textContent = this.value;
+        });
+    </script>
+
+</body>
+</html>
